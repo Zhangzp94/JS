@@ -197,7 +197,7 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 
 
 
-![logo](http://github.com/Zhangzp94/JS/tree/master/images/logo.png/)
+![logo](https://github.com/Zhangzp94/JS/blob/master/images/logo.png/)
 
 
 
