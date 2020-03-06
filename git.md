@@ -187,15 +187,17 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 3) /js/do.c  过滤某个具体文件
 4) !index.php	不过滤某个具体文件
 #开头的都是注释！
-
-
 ````
 
 
 
-![logo](https://github.com/Zhangzp94/JS/raw/master/images/logo.png/)
 
-![img](../images/logo.png/)
+
+![logo](C:\project\JavaScript\JS\images\logo.png)
+
+
+
+
 
 
 
