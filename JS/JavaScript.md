@@ -2,7 +2,7 @@
 
 
 
-### 1.节点属性
+### 1、节点属性
 
 - 文档：Document
 
@@ -89,9 +89,9 @@
 
 
 
-### 2.DOM元素的操作
+### 2、DOM元素的操作
 
-##### （1）插入和删除元素
+##### 01 插入和删除元素
 
 ```js
 元素的相关操作方法
@@ -119,7 +119,7 @@ my$("bt2").onclick=function () {
 }
 ```
 
-##### （2）创建元素
+##### 02 创建元素
 
 ***创建元素的三种方式***
 
@@ -144,7 +144,7 @@ my$("bt").onclick=function(){
  my$("dv").appendChild(obj);//添加！
 ```
 
-##### （3）获取元素的方式
+##### 03 获取元素的方式
 
 ```js
 总结：DOM获取元素的几种方式
@@ -162,13 +162,48 @@ my$("bt").onclick=function(){
 -->document.querySelectorAll("选择器的名字")
 ```
 
+##### 04 添加/删除类样式
+
+```js
+<div id="dv" class="class1 class2 class3 "></div>
+<script>
+    let dv = document.querySelector("#dv");
+    dv.classList.add("class5")
+    dv.classList.remove("class3")
+	dv.classList.toggle("class3");//这个是判断入股有class3就删除，没有就新增！
+    console.log(dv.className)
+</script>
+```
+
+##### 05 获取以data-开头的自定义属性
+
+只要是以data-开头的自定义属性都可以使用 ele.dataset 获取属性
+
+````js
+<div id="dv" class="class1 class2 class3" data-one="one"></div>
+
+1.获取
+console.log(dv.dataset.one);//这里直接写data-后面的即可！如果属性是data-one-tee，那么就要用驼峰命名写：dv.dataset.oneTee
+
+2.设置
+dv.dataset.one="two"
+````
+
+##### 06 可编辑功能
+
+用户可以在div内打字编辑。只需要给div加 contenteditable="true" 这个属性
+
+```js
+<div id="dv" class="class1 class2 class3" data-one="one"
+    contenteditable="true"
+>1111</div>
+```
 
 
 
+### 3、事件
 
-### 3.事件
-
-##### （1）绑定事件
+##### 01 绑定事件
 
 - addEventListener(type,fn,false) 适用于谷歌 火狐  ，attachEvent  适用于 Ie8，attachEvent  （） 中事件的类型有 On 
 
@@ -211,7 +246,7 @@ my$("bt").onclick=function(){
 
   
 
-##### （2）解绑事件
+##### 02 解绑事件
 
 ***第一种***
 
@@ -284,7 +319,7 @@ my$("bt2").onclick=function () {
     }
 ```
 
-##### （3）事件冒泡
+##### 03 事件冒泡
 
 - ***冒泡事件定义：***多个元素嵌套，有层次关系，这些元素都注册了相同的事件，如果里面的元素的事件触发了，外面的元素的事件也自动触发了。
 
@@ -331,11 +366,11 @@ my$("bt2").onclick=function () {
    };
   ```
 
-##### （4）拖拽事件
+##### 04 拖拽事件
 
 `onmousedown;onmousemove;onmouseup;`
 
-##### （5）自定义触发事件
+##### 05 自定义触发事件
 
 - 自定义触发事件，`element.dispatchEvent()`
 
@@ -346,7 +381,7 @@ element.dispatchEvent(eve)
 element.addEventListener('myEvent',function(){})
 ```
 
-##### （5）事件类型
+##### 06 事件类型
 
 ***1. resize事件***
 
@@ -471,9 +506,9 @@ function getScroll() {
 
 
 
-### 4.`BOM`介绍
+### 4、BOM介绍
 
-##### （1）location对象
+##### 01 location对象
 
 ```js
 reload()  重新加载当前页面
@@ -503,7 +538,7 @@ window.onload=function () {
 }
 ```
 
-##### （2）history对象
+##### 02 history对象
 
 ```js
 back 向后退一页
@@ -529,7 +564,7 @@ length 属性返回历史列表中的网址数
   	}
   ```
 
-##### （3）screen对象
+##### 03 screen对象
 
 ```js
 .availHeight 屏幕的高度（不含系统部件高度，就是程序栏）
@@ -538,7 +573,7 @@ length 属性返回历史列表中的网址数
 .width 屏幕的宽度
 ```
 
-##### （4）navigator对象
+##### 04 navigator对象
 
 ```js
 userAgent  返回由客户机发送服务器的 user-agent 头部的值
@@ -555,7 +590,7 @@ console.log(window.navigator.userAgent);
 
 
 
-### 5.正则表达式
+### 5、正则表达式
 
 - 正则表达式主要是用于***字符串*** 的查找，验证，修改，替换。
 
@@ -656,7 +691,7 @@ console.log(window.navigator.userAgent);
 
 
 
-### 6.cookie
+### 6、cookie
 
 定义：cookie实际上就是一些信息，这些信息以文件的形式存储在客户端计算机上，当用户访问了某个网站，可以通过cookie向访问者电脑上存储数据。为了不在关闭页面的时候，就把数据消失掉，这时候就需要用到cookie。而本地的存储手段有几种，在Application(应用) -- Storage(存储)，里面有本地存储、数据库存储、cookie。
 
@@ -699,7 +734,7 @@ document.cookie = JSON.Stringify(obj)+';expires='+date.toString()
 
 
 
-### 7.XSS攻击
+### 7、XSS攻击
 
 定义：在表单评论的时候，如果用户输入的内容为 `<script>alert(document.cookie)</script>` 或者
 
@@ -707,7 +742,7 @@ document.cookie = JSON.Stringify(obj)+';expires='+date.toString()
 
 解决方法：前端处理可以在submit提交的时候，对Input的value值是否有script或者javascript: 这样的字符串（转换成大小写后判断），如果有就需要替换这个文本内容，比如把script替换成 [remove]等。 
 
-### 8.webStorage
+### 8、webStorage
 
 webStorage分为2种：localStorage (本地长期存储) 和 sessionStorage (本地即时存储)
 
@@ -741,26 +776,6 @@ localStorage特点：
 ##### （1）JS继承的6种方式
 
 https://www.cnblogs.com/Grace-zyy/p/8206002.html 
-
-
-
-
-
---------------------------------
-
-### 
-
-1. 克隆节点
-2. 焦点事件
-3. 设置、获取、删除元素属性
-4. 设置文本内容 `setInnerText`
-5. `Object.assign()`方法
-
-
-
-----------
-
-
 
 1.克隆节点
 

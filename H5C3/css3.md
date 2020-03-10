@@ -555,3 +555,265 @@ transform: scaleZ(2) translateZ(100px);//这个实际上是平移了200px，但�
 
 比如画一个半透明的正方体，是可以看到背面的图的，用backface-visibility:hidden;就看不到了！
 
+### 7、动画
+
+##### 01 @keyframes关键帧
+
+````js
+@keyframes myfirst //myfirst 是 animations 的动画名字！
+{
+    from {background: red;}
+    to {background: yellow;}
+}
+
+第二种写法：
+@keyframes myfirst
+{
+    0%   {background: red; left:0px; top:0px;}
+    25%  {background: yellow; left:200px; top:0px;}
+    50%  {background: blue; left:200px; top:200px;}
+    75%  {background: green; left:0px; top:200px;}
+    100% {background: red; left:0px; top:0px;}
+}
+````
+
+##### 02 animation动画
+
+````js
+animation-name:myfirst; //动画的名字
+animation-duration: 3s; //动画时间
+animation-timing-function: linear; //动画效果，是否匀速等，其他属性参照transition-timing-function参数属性！
+animation-delay: 1s; //延迟时间
+animation-iteration-count:n[infinite]; //动画次数  infinite 无限循环！
+animation-direction:reverse[alternate]; //reverse 反向动画 ;alternate 是来回动画，from...to...变得衔接上了！alternate-reverse 是先从to 开始 来回衔接！
+
+animation-fill-mode：backwards[both\forwards]；// 元素form或者to的时候的状态！
+//比如：A初始位置在Y轴0px，让它从from -100px to 100px！
+backwards就是让动画初始位置在-100px！
+forwards 让动画结束位置在100px! 
+both是让动画初始和结束在-100px和100px位置！ 
+否则默认的情况A初始和结束都是在0px的位置！
+
+animation-play-state:paused[running];// 定义了动画执行的运行和暂停！默认是running！paused 比如是鼠标移动到动画上可以暂停！
+````
+
+````js
+连写：
+		  名字  时间 延迟 匀速    次数       来回动画
+animaiton:name 3s   1s  linear infinite  alternate  ;
+````
+
+### 8、弹性盒子(flex)
+
+弹性盒子分老版和新版，老版叫box,新版叫flex。
+
+##### 01 容器布局
+
+注意：容器布局的属性是写在最外层包裹的容器上的，不是子元素项目上的！
+
+````js
+新版flex
+display: flex;
+//控制主轴的横纵向
+flex-direction: column;//这是容器主轴方向，默认是row 横向;
+//column-reverse  是设置主轴元素的排列方向,比如 1 2 3 盒子，用了column-reverse 就成了 3 2 1 排列
+//row-reverse  横向控制主轴内元素的朝向，是向左还是向右
+
+//控制盒子的富裕空间，就是项目内盒子间隙的富裕空间！
+justify-content: flex-start;//富裕空间在左边 和老版的相反
+//flex-end 在右边
+//center 盒子在项目的中间
+//space-between 两边的盒子顶格，然后剩下的平均分布 ==老版本的justify
+//space-around 富裕空间在项目两边 就是平均分布（这个是老版本没有的）
+
+//控制项目盒子的左右上下分布的 （比如项目内有一条上下排列的几个盒子）
+align-items: center;
+// flex-start 左边 贴着左边排布
+// flex-end 右边
+// baseline 项目内元素的基线对其的
+// stretch 等高布局（前提是盒子是没有height的，用了这个属性就会让盒子继承项目高度100%）
+````
+
+````js
+老版box
+display: -webkit-box;
+//控制主轴的横纵向
+-webkit-box-orient: horizontal [vertical];//horizontal 纵向 ； vertical 横向
+
+//控制主轴内盒子的方向，类似于flex-direction:column-reverse 的属性！
+-webkit-box-direction: reverse [normal];//reverse 纵向 normal 横向！
+
+//控制盒子的富裕空间，就是项目内盒子间隙的富裕空间！
+-webkit-box-pack: center;
+//start 比如是横向排列的元素，这个富裕空间在右边
+//end 在左边
+//center 盒子在项目的中间
+//justify 两边的盒子顶格，然后剩下的平均分布
+
+//控制项目盒子的左右上下分布的 （比如项目内有一条上下排列的几个盒子）
+-webkit-box-align:center //这条盒子在项目的中间
+// start 左边
+// end 右边
+````
+
+##### 02 弹性空间管理
+
+下面的属性是写在项目子元素上的！
+
+就是给盒子的宽度进行富裕空间的分配管理！
+
+````js
+新版flex
+flex-grow:1; //每个盒子都是一样大小的去瓜分项目横向空间
+````
+
+````js
+老版box
+-webkit-box-flex:1;
+````
+
+##### 03 flex新增的属性
+
+***1) flex-wrap***
+
+例子：假设项目宽度100px，有5个50px的盒子，那么盒子就会放不下，但是flex布局会默认自动收缩然后布局在同一行，Box布局就不会，会直接溢出！
+
+flex-wrap属性就是控制盒子是自动收缩还是换行，默认是收缩！
+
+````js
+flex-wrap: wrap; //换行 如下图
+````
+
+
+
+<img src="..\images\4.png" alt="4" style="zoom:67%;" />
+
+````js
+// wrap-reverse 从下开始排布，如下图
+````
+
+<img src="..\images\5.png" alt="4" style="zoom:67%;" />
+
+***补充：flex-flow 属性***
+
+flex-direction 是控制主轴方向和侧轴的朝向的，而flex-wrap是控制是否换行！
+
+flex-flow 是上面2个属性的复用，比如：flex-flow:row-reverse wrap;
+
+
+
+***2) align-content***
+
+多行多列的时候看align-content，单行单列的时候看align-items属性！
+
+```
+align-content: flex-end;//多行的时候，顶着顶面排布
+```
+
+<img src="..\images\7.png" alt="7" style="zoom:67%;" />
+
+```
+align-content: flex-start;//多行的时候，顶着底面排布
+```
+
+<img src="..\images\6.png" alt="6" style="zoom:67%;" />
+
+##### 04 order属性
+
+order值越大越往后排。
+
+```js
+#wrap > .item:nth-child(1) {
+    order: 3;
+}
+#wrap > .item:nth-child(2) {
+    order: 1;
+}
+#wrap > .item:nth-child(3) {
+    order: 5;
+}
+#wrap > .item:nth-child(4) {
+    order: 2;
+}
+#wrap > .item:nth-child(5) {
+    order: 4;
+}
+```
+
+上面排序的结果就是按order值排列的！
+
+<img src="..\images\8.png" alt="8" style="zoom:75%;" />
+
+##### 05 align-self
+
+align-self 会对齐当前flex行中的flex元素，并覆盖 align-items 的值，如果任何flex元素，如果任何flex元素侧轴方向margin值设置为auto，则会忽略align-self。
+
+上面的 align-items 和 align-content 都是管理富裕空间的， 一个是管理单行 一个是管理多行的。align-self 是管理单个元素的
+
+```js
+#wrap > .item:nth-child(1) {
+    order: 3;
+    align-self: flex-end; //看这里，对应看下图
+}
+#wrap > .item:nth-child(2) {
+    order: 1;
+}
+#wrap > .item:nth-child(3) {
+    order: 5;
+}
+#wrap > .item:nth-child(4) {
+    order: 2;
+}
+#wrap > .item:nth-child(5) {
+    order: 4;
+}
+```
+
+
+
+<img src="..\images\9.png" alt="9" style="zoom:75%;" />
+
+
+
+--其他的flex-basis 和 flex-shrink 属性自行百度
+
+
+
+##### 06 布局小案例
+
+当项目元素没有设置width的时候，直接flex-grow:1;那么项目元素不是等分布局，是根据内容铺满分布！
+
+```js
+--css部分
+#wrap > .item {
+    /*width: 50px;*/ 
+    height: 50px;
+    line-height: 50px;
+    background-color: pink;
+    text-align: center;
+    flex-grow: 1;
+    /*flex-basis: 0;*/
+}
+
+--html部分
+<div id="wrap">
+    <div class="item">111</div>
+    <div class="item">222222</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+</div>
+```
+
+<img src="..\images\10.png" alt="10" style="zoom:75%;" />
+
+但是如果加了width 或者 flex-basis: 0; 时候就是等分布局了！flex-basis的用法就是先把项目宽度清0，然后所有的 宽度=flex-basis值 0 + 等分布局的宽度！
+
+<img src="..\images\11.png" alt="11" style="zoom:75%;" />
+
+##### 07 flex简写
+
+```js
+flex:1;//这个代表是 flex-grow: 1; flex-basis: 0; flex-shrink: 0; 就是等分布局
+```
+

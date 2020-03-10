@@ -205,6 +205,8 @@ li + li{
 img[src]{};//包含src属性的元素
 div[class*="text"];//所有，记得加" "
 div[name="username"];
+
+<input type="checkbox" name="items"/> //可以这么选择 :checkbox[name=items]
 ```
 
 
