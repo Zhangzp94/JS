@@ -199,7 +199,19 @@ dv.dataset.one="two"
 >1111</div>
 ```
 
+##### 07 ele.remove()删除元素
 
+这个API可以删除DOM元素！
+
+```js
+<div>111111</div>
+<button>click</button>
+<script>
+     document.querySelector("button").addEventListener("click",function () {
+        document.querySelector("div").remove()
+     })
+</script>
+```
 
 ### 3、事件
 

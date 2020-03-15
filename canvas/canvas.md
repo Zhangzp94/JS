@@ -1,4 +1,4 @@
-# Canvas
+# 	 Canvas
 >canvas 最早由Apple引入WebKit,用于Mac OS X 的 Dashboard,后来又在Safari和Google Chrome被实现。 
 >基于 Gecko 1.8的浏览器,比如 Firefox 1.5, 同样支持这个元素。  
 >&lt;canvas&gt; 元素是WhatWG Web applications 1.0规范的一部分,也包含于HTML 5中。  
