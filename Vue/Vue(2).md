@@ -46,7 +46,7 @@
 <!--    <a href="#/login">登录</a>-->
 <!--    <a href="#/register">注册</a>-->
 
-<!--    router-link 默认渲染出一个a 标签；也可以加个 tag=''属性修改渲染出来的标签-->
+<!-- router-link 默认渲染出一个a 标签；也可以加个 tag=''属性修改渲染出来的标签-->
     <router-link to="/login?id=1&name=校长" tag="span">登录</router-link>
     <router-link to="register/10/ak">注册</router-link>
 
@@ -237,6 +237,7 @@ js中 location.href跳转
 clickHander(id){
      this.$router.push({name:'detail',params:{id:id}})
 }
+this.$router.push({path:`/singer/${item.mid}`})
 ```
 
 
@@ -706,7 +707,7 @@ export default new Vuex.Store({
     actions:{},
     getters:{//如果对state里面的数据不满意，这里可以去处理state的数据，
         filter(state){
-            state.list.filter((item,index=>index<5))
+           return  state.list.filter((item,index=>index<5))
         }
     }
 })
@@ -779,4 +780,78 @@ const store = new Vuex.Store({  //合并上面的A B
 })
 ````
 
- 
+##### 7、vuex语法糖
+
+**01 import {mapState} from 'vuex'**
+
+直接把state中的属性映射到组件中去 ，可以调用！
+
+````js
+--store文件
+state{
+    list:[]
+}
+--组件文件中
+computed:{
+    ...mapState(['list']),//这里===  list(){return ..}
+    a(){},
+  	
+}
+````
+
+**02  import {mapMutations} from 'vuex'**
+
+```js
+...mapMutations(['SET_SINGER'])//映射mutations中的方法
+SET_SINGER就是mutations中的方法
+通过  this.SET_SINGER(item)直接调用这个方法item参数可以在方法中操作state中的值
+```
+
+**03 import {mapGetters} from 'vuex'**
+
+````js
+getters 里面可以操作state里面的属性！一般通过getters获取state中的属性
+...mapGetters(['singer']);//singer就是getters里面的方法
+this.singer;//调用
+
+--getters文件
+const getters = {
+    singer:state=>{state.singer}
+}
+export default getters
+````
+
+
+
+#####  8、vuex初始化配置
+
+
+
+````js
+--state.js文件
+const state = {
+    singer:{}
+}
+export  default state
+
+--mutations_type.js文件
+export const SET_SINGER = "SET_SINGER"
+
+--mutations.js文件
+import * as types from "./mutations_type"
+const mutations = {
+    [types.SET_SINGER](state,payload) {
+        state.singer = payload
+    }
+}
+export default mutations
+
+--getters.js文件
+const getters ={
+    singer:state => state.singer
+}
+export default getters
+````
+
+
+

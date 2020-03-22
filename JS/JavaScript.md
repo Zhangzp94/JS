@@ -173,6 +173,48 @@ my$("bt").onclick=function(){
 	dv.classList.toggle("class3");//这个是判断入股有class3就删除，没有就新增！
     console.log(dv.className)
 </script>
+
+以上的方法兼容性不高！
+下面是自己封装的兼容性高的方法！
+<script>
+    function addClass(node,className) {
+        var reg = "/\\b"+className+"\\b/g";
+        if (!reg.test(node.className)){
+            node.className+=" " + className
+        }
+    }
+    function removeClass(node,className) {
+        var reg = "/\\b"+className+"\\b/g";
+        if (node.className){
+            if (reg.test(node.className)){
+                node.className = node.className.replace(reg,"")
+            }else if (/^\s*$/g.test(node.className)){
+                //这一步是为了如果原来只有一个className，那么删除后就剩下" "
+                node.removeAttribute("class")
+            }
+        }else{
+            node.removeAttribute("class")
+        }
+
+    }
+</script>
+```
+
+```js
+//添加className
+export function hasClass(el,className) {
+    let reg =  new RegExp('(^|\\s)'+className+'(\\s|$)')
+    return reg.test(el.className)
+}
+export function addClass(el,className) {
+    if (hasClass(el,className)){
+        return;
+    }else{
+        let newClass = el.className.split(' ');
+        newClass.push(className)
+        el.className=newClass.join(' ')
+    }
+}
 ```
 
 ##### 05 获取以data-开头的自定义属性
@@ -212,6 +254,16 @@ dv.dataset.one="two"
      })
 </script>
 ```
+
+
+
+
+
+
+
+
+
+
 
 ### 3、事件
 
@@ -351,7 +403,7 @@ my$("bt2").onclick=function () {
 
   
 
-  ![img](C:/Users/25830/AppData/Local/YNote/data/weixinobU7VjrVn-NQSLDtklCTU8kYHOA0/fdde95d7cdd94f958ba26c3879dbcbc1/9711e155a6414fa0819d60fe67f27e46.jpg)
+  ![43](..\images\43.jpg)
 
   ```js
   ele.addEventListener('click',function(e){
@@ -381,6 +433,57 @@ my$("bt2").onclick=function () {
 ##### 04 拖拽事件
 
 `onmousedown;onmousemove;onmouseup;`
+
+**案例：**
+
+```js
+<script>
+    var button = document.querySelector(".button")
+    var deeppink = document.querySelector(".deeppink")
+    trig(button,deeppink)
+    function trig(testNode, deeppink) {
+        //button的初始位置
+        var elePosition = {x: 0, y: 0}
+        //鼠标点击的位置
+        var busClick = {x: 0, y: 0}
+        //鼠标移动的位置
+        var busMove = {x: 0, y: 0}
+
+        testNode.onmousedown=function(ev){
+            if (testNode.setCapture) {
+                testNode.setCaptur()
+            }
+
+            //初始位置
+            elePosition.x = this.offsetLeft
+            elePosition.y = this.offsetTop
+            //点击的时候的位置
+            busClick.x = ev.clientX
+            busClick.y = ev.clientY
+            document.onmousemove=function (ev) {
+                busMove.x = ev.clientX
+                busMove.y = ev.clientY
+                //这是滑块每次移动后的位置
+                var L = elePosition.x + busMove.x - busClick.x ;
+                if (L<0){
+                    L = 0
+                } else if(L > (testNode.parentNode.clientWidth-testNode.offsetWidth)){
+                    L = testNode.parentNode.clientWidth-testNode.offsetWidth
+                }
+                testNode.style.left = L +"px"
+                deeppink.style.width = L +"px"
+            }
+            document.onmouseup=function () {
+                document.onmousemove=document.onmouseup=null
+                if (testNode.releaseCapture) {
+                    testNode.releaseCaptu()
+                }
+            }
+
+        }
+    }
+</script>
+```
 
 ##### 05 自定义触发事件
 

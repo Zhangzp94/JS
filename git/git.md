@@ -191,16 +191,6 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 
 
 
-
-
-![logo](C:\project\JavaScript\JS\images\logo.png)
-
-
-
-
-
-
-
 ````js
 pwd //查看当前在哪个文件夹目录
 git init //git初始化，会出现一个.git的文件夹！

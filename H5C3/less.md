@@ -153,7 +153,7 @@
 2、下面的案例是画三角形，那么不同方向的三角形自然有多个变量，所以.tringle(L,@w){} 的参数1就是用来匹配的
 
 ````js
-.tringle(@_){} ,
+.tringle(@_,@w){} ,//这里注意要加@w 要对称！
 .tringle(L,@w){} ,
 ````
 
@@ -161,6 +161,12 @@
 --tringle.less文件中
 
 ````
+
+
+
+<img src="C:\project\notes\JS\images\38.jpg" alt="38" style="zoom:70%;" />
+
+
 
 ##### 5、less继承
 

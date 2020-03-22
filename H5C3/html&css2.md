@@ -197,6 +197,10 @@ li + li{
 <li></li>
 8. ~号 选择器
 用法类似 +号，不同的是如果有其他标签，会跳过这个a标签，继续向后选择一样的标签。
+9. 排除最后一项的选择器
+li:not(:last-child){}
+
+
 ```
 
 ##### 属性选择器
@@ -209,10 +213,6 @@ div[name="username"];
 <input type="checkbox" name="items"/> //可以这么选择 :checkbox[name=items]
 ```
 
-
-
-![1571831512849](C:\Users\25830\AppData\Roaming\Typora\typora-user-images\1571831512849.png)
-
 ##### 结构伪类选择器
 
 ```html
@@ -224,10 +224,6 @@ div:nth-child(Xn +1) 表达式写法
 
 :first-of-type \ div p:nth-of-type()  //div里面 从p元素开始数，就是从type为p的元素开始
 ```
-
-![img](C:/Users/25830/AppData/Local/YNote/data/weixinobU7VjrVn-NQSLDtklCTU8kYHOA0/80b55143faee46698784cb9009b8f16e/36aae615a09c43348eeb30d10bb850a4.jpg)
-
-
 
 
 
@@ -396,8 +392,6 @@ outline: none
 	或者把img转为块元素，块元素默认无间隙
 ```
 
-![img](C:/Users/25830/AppData/Local/YNote/data/weixinobU7VjrVn-NQSLDtklCTU8kYHOA0/e2eb482fda3544e28df0504c47055431/47c4693212654b26a26c52e155efb9c3.jpg)
-
 
 
 ##### 元素的显示和隐藏
@@ -420,10 +414,6 @@ text-overflow: ellipsis;  //溢出的文本用省略号代替
   /以上三句代码缺一不可/
 }
 ```
-
-![img](C:/Users/25830/AppData/Local/YNote/data/weixinobU7VjrVn-NQSLDtklCTU8kYHOA0/14571d612f364336b8ebf9c4e642c71c/30ff2286d10845c68a72f24aa0bee8d7.jpg)
-
-
 
 
 
