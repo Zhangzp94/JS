@@ -21,6 +21,21 @@
 
 `webpack 要打包的文件  -o 打包后保存的文件地址  --mode development`
 
+`webpack --config webpack.config.js`运行webpack配置文件打包！
+
+在package.json文件中的scripts里面
+
+````js
+{
+    "build":"webpack --config webpack.config.js" , //直接npm run build 就会执行webpack文件去 打包
+    "dev":"webpack-dev-server --config webpack.config.js" //npm run dev 就是开发环境运行
+}
+````
+
+
+
+
+
 ##### （2）`webpack-dev-server`
 
 - 这个工具是用来帮忙自动打包编译的功能，并且自动刷新浏览器！
@@ -205,7 +220,47 @@ module:{//这个节点用于配置所有第三方模块，加载器
     }
   ```
 
-##### （7）babel配置
+##### （6-1）开发环境文件名的hash和生产的hash
+
+webpack中输出文件名的hash值，开发环境和生产环境不能一样！生产环境中用的是chunkhash
+
+![61](..\images\61.png)
+
+
+
+##### (7) use 和loader的使用
+
+只有一个Loader的时候用loader:'vue-loader'
+
+有多个loader的时候，用use，
+
+````js
+rules:[
+{
+    test:/\.(eot|svg|ttf|woff|woff2)$/,
+    use:[
+        loader:'url-loader',
+        options:{
+        	limit:1024,
+        	name:'[hash:8]-[name].[ext]'
+        }
+    ]
+},
+        
+{
+     test:/\.css$/ , 
+     use:['style-loader','css-loader'],       
+},
+    
+    
+]
+````
+
+
+
+
+
+##### （8）babel配置
 
 ​	在主js文件中，我们使用了一些es6语法，此时需要使用第三方loader 把高级语法转为低级语法后，会把结果打包给webpack去打包到bundle.js文件中！
 
@@ -213,12 +268,12 @@ module:{//这个节点用于配置所有第三方模块，加载器
 
 ````js
 第一套包：Babel的转换工具
-npm i -D @babel/core babel-loader 
-npm install --save-dev @babel/plugin-proposal-object-rest-spread
-npm install --save-dev @babel/plugin-transform-runtime
-npm install --save @babel/runtime
+cnpm i -D @babel/core babel-loader 
+cnpm install --save-dev @babel/plugin-proposal-object-rest-spread
+cnpm install --save-dev @babel/plugin-transform-runtime
+cnpm install --save @babel/runtime
 第二套包：Babel的语法
-npm i @babel/preset-react @babel/preset-env babel-preset-mobx
+cnpm i @babel/preset-react @babel/preset-env babel-preset-mobx
 ````
 
 
@@ -234,7 +289,7 @@ npm i @babel/preset-react @babel/preset-env babel-preset-mobx
    配置如下：
 
    ```js
-   presets//预设--就是babel的语法
+   //presets//预设--就是babel的语法
    {
        "presets": ["@babel/preset-env", "@babel/preset-react", "mobx"],
        "plugins": [
@@ -243,6 +298,49 @@ npm i @babel/preset-react @babel/preset-env babel-preset-mobx
        ]
    }
    ```
+
+
+
+
+
+
+
+##### (9)多个入口文件怎么配置
+
+````js
+    //入口文件有多个的时候可以配置成对象的形式
+    entry:{
+        path.join(__dirname+'/src/main.js'),
+        path.join(__dirname+'/src/main.js'),
+    }
+      //出口文件
+      output:{
+      path:path.join(__dirname+'./dist'),
+        filename:'[name].bundle.js'    //加 [name].
+    }, 
+````
+
+##### (10)mode介绍
+
+````js
+--webpack.config.js文件
+module.exports = {
+	mode:"development" //表示开发者模式，运行webpack打包的时候会带上console.log这样的代码，
+	// mode:"production" 生产模式，运行webpack打包的时候就没有类似console.log这样的代码，更简洁！
+}
+````
+
+##### （11）postcss-loader 和 autoprefixer插件介绍
+
+autoprefixer 的配置需要创建 postcss.config.js文件，这些说的自己创建的文件暂时不适用于cli3脚手架！是自己原生写的！
+
+![59](..\images\59.png)
+
+
+
+![60](..\images\60.png)
+
+
 
 #### webpack文件的总结
 
@@ -253,12 +351,13 @@ var webpack = require('webpack');//热更新第二步
 var htmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     //入口文件
-  entry:path.join(__dirname+'/src/main.js'),
+    entry:path.join(__dirname+'/src/main.js'), 
   //出口文件
     output:{
       path:path.join(__dirname+'./dist'),
         filename:'bundle.js'
     },
+    mode:"development", //表示开发模式，一般开发模式的时候打包会有console.log这样的代码，编译的时候会警告，加上mode就不会有警告了!
   devServer:{
     open:true,//自动打开页面
     port:3000,//设置端口号
@@ -326,7 +425,7 @@ resolve:{
 }
 ```
 
-***vue-loader***
+##### (8-1)   vue-loader
 
 ```js
 webpack 解析 后缀 .vue文件的loader

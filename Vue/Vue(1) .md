@@ -105,6 +105,18 @@
       <input type="text" v-model="msg" style="width: 100%">
   ```
 
+
+
+***补充事件input***
+
+````js
+<input  @input="handleInput"> //input有个事件是 input事件，只要输入的时候就会触发这个事件
+````
+
+
+
+
+
 ##### （4）通过属性为元素绑定类样式
 
 1. 直接给class属性传递一个数组，但是要给class绑定v-bind！数组内部要用`引号`包裹类名，否则就是变量，会按变量的形式到vue的data变量属性里面找！
@@ -137,7 +149,7 @@
    <h1 v-bind:class="{类名1:true,类名2:true}">;//写法一
    
    //写法二
-   <h1 v-bind:class="obj">;
+   <h1 v-bind:class="obj">;	
    <script>
        var vm = new Vue({
            el:'#app',
@@ -181,6 +193,14 @@
     })
 </script>
 ```
+
+
+
+````js
+<h1 :class="['class1','class2',{class3:flag}]">
+````
+
+
 
 ##### （6）v-for
 
@@ -278,6 +298,14 @@
     <h3 v-if="flag">ififif</h3>
     <h3 v-show="flag">showshow</h3>
 ```
+
+##### (7-1) v-once
+
+
+
+![66](..\images\66.png)
+
+
 
 ##### （8）安装vuedevtools
 
@@ -449,6 +477,8 @@ Vue.directive('color', function(){
   - `beforeCreate`钩子函数
 
     初始化实例的时候使用，还没有生成data。
+
+
 
 
 
@@ -642,7 +672,44 @@ Vue.http.options.emulateJSON = true;
 
 可以在github上搜！下翻到 一句话为 `Check out all the animations here!`
 
+
+
+##### (18)vm.$el
+
+````
+比方说我这里想获取自定义组件tabControl，并获取它的OffsetTop。就需要先获取该组件。
+
+在组件内设置   属性 ref=‘一个名称(tabControl2)‘, 
+
+然后 this.$refs.tabControl2     就拿到了该组件 
+
+切记：ref属性，而获取组件的时候要用$refs
+
+ 
+
+获取  OffsetTop，组件不是DOM元素，是没有OffsetTop的，无法通过 点 .OffsetTop来获取的。就需要通过$el来获取组件中的DOM元素
+this.$refs.tabControl2.$el.offsetTop
+````
+
+##### （19）
+
+
+
+
+
+
+
 ### Vue组件
+
+
+
+路由中引入组件的懒加载方法！
+
+````js
+
+````
+
+
 
 ***定义组件***
 
@@ -796,6 +863,12 @@ Vue.http.options.emulateJSON = true;
 </script>
 ```
 
+
+
+##### （3-1）props
+
+
+
 ##### （3）子组件向父组件传值
 
 - 本质就是父组件先向子组件传入一个方法，然后子组件调用方法，并且传入参数，这时候把参数值传入父组件
@@ -892,7 +965,7 @@ Vue.http.options.emulateJSON = true;
 
 ```
 
-##### （5）bus事件总线
+##### （5）bus事件总线  $on
 
 - 本质就是几个同级组件之间相互通信关联！
 
@@ -959,6 +1032,22 @@ Vue.http.options.emulateJSON = true;
   </script>
   ```
 
+````js
+app.$on('事件1',()=>{}) 这里就是可以监听下面的事件
+app.$emit('事件1','a');//传入事件
+
+
+app.$once('事件2',fn) //只监听事件2一次！
+setInterval(()=>{
+app.$once('事件2',fn)    
+},1000)
+
+````
+
+
+
+
+
 ##### （6）slot插槽
 
 ​		为了组件的可复用性，比如封装了一个轮播图组件，每次调用的时候图片数量不一致，如果你把所有的`li`
@@ -985,7 +1074,7 @@ Vue.http.options.emulateJSON = true;
     Vue.component('one',{
         template:`
           <div>
-            <slot></slot>
+            <slot></slot> //this.$slots.default
           </div>
         `,
     });
@@ -1077,10 +1166,57 @@ Vue.http.options.emulateJSON = true;
 
 
 
+##### 08 为啥组件中的data必须是funciton
+
+如果使用一个全局的data，那么一个组件的data中的某个属性比如name改变的时候，其他组件中的属性name也会改变！
+
+##### 09 $parent
+
+组件B 在组件A中被调用，那么组件B相当于子组件，可以用 `this.$parent.$options.`就可以找到组件A！
+
+````js
+import Vue from 'vue'
+const B = { //孙子组件
+    template:`<div></div>`
+    mounted(){
+        console.log(this.$parent.$options.name)//打印出 A组件
+        //上面的组件B只能调用父组件A的属性！那么要想调用爷爷组件怎么办呢？？
+        //第一：就在爷爷组件用 provide(){return {}} ， 第二：子组件用 inject:[]引用
+        consloe.log(this.value)//第三
+    },
+    inject:['value']
+}
+const A = { //爸爸组件
+    name:'A',
+    compotents:{
+        B 
+    }
+}
+
+new Vue({ //爷爷组件
+    compotents:{
+        A 
+    },
+    data(){
+        return {
+            value:'zzp'
+        }
+    },
+    provide(){
+        return {
+            yeye:this,
+            value:this.value
+        }
+    }
+})
+````
 
 
 
-###### ***小知识点：***
+
+
+
+##### ***小知识点：***
 
 ***第一***
 

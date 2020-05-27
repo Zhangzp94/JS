@@ -1,4 +1,4 @@
-# `Vue`（二）
+# ` Vue`（二）
 
 ### `Vue`路由
 
@@ -82,6 +82,17 @@
             {path:'/register/:id/:name',component:register},
         ],
         linkActiveClass:'myactive',//可以自定义一个类名来设置样式，自定义了后原始的失效！
+        linkExactActiveClass:'myExactActive' //这个和上面的区别是 这个 比如路由路径是/login 和/login/regist，/login的路径会显示 myactive 和myExactActive类名，/login/regist只会显示myactive类名！
+        mode:'history' //去掉hash符号 # 
+        scrollBehavior(to,from,savedPosition){
+        	//这个是判断app滚动的时候，比如打开一页面滚动到A位置的时候，用户退出去再进来的时候就会自动跳转到A位置，一般如下设置！
+        	if(savedPosition){
+                return savedPosition
+            }else{
+                return {x:0,y:0}
+            }
+    	},
+            
     });
     var vm =new Vue({
         el:'#app',
@@ -142,6 +153,7 @@
             {path:'/account',component:account,
                 children:[
                     //这里不需要加/login，加了'/'是默认以跟目录开始，不加会自动拼接上面的/account
+                    //这里就需要在account组件中去加 router-view 去放login组件和register组件!
                     {path:'login',component:login},
                     {path:'register',component:register}
                 ]
@@ -192,7 +204,7 @@
     };
     var router = new VueRouter({
        routes:[
-           {path:'/',components: {
+           {path:'/',components: {  //注意这里是  components
                'default':header,
                    'left':left,
                    'right':right
@@ -210,7 +222,15 @@
     })
 </script>
 </body>
+    
+    
+    思考：啥时候要用这种方式布局？？
+    因为你要知道 一个路由可以显示一个大的组件，那么一个页面，如下图点击A的时候 left变化内容，点击B的时候left变化内容，但是都需要保持组件right不变，那么可以用一个router-view显示一个大组件!
 ```
+
+![67](..\images\67.png)
+
+
 
 ###### （3-1）路由的跳转方式
 
@@ -239,6 +259,35 @@ clickHander(id){
 }
 this.$router.push({path:`/singer/${item.mid}`})
 ```
+
+跳转返回
+
+`````
+this.$router.back()
+`````
+
+````js
+routes:[
+    {
+    path:'detail/:id',
+    props:true, //这个属性是说明 比如我在A组件点击'detail/:id'路径跳转到 detail 组件，那么在detail组件中可以在 props:["id"] ，定义下props，就可以拿到id！不需要通过`this.$route.params.id`
+    上面的props还有其他2种用法！可以传入自定义的数据
+        props:{id:000}
+    	props:(route)=>({id:route.query.id})
+    name:'detail', //跳转路由的时候也可以根据name 跳转 <router-link :to="{name:'detail'}">
+    component:detail,
+    meta:{//是用来保存路由中的信息的，有点类似于写html的时候 head标签里面的meta，保存的信息有利于处理seo的东西！
+        title:'this ...',
+        decription:'sadad'
+    }，
+        
+    }
+]
+````
+
+````js
+console.log(this.$route) ;//可以输出当前路由的信息
+````
 
 
 
@@ -292,11 +341,39 @@ router.beforeEach((to, from, next) => {//这里的next相当于node中的next，
 })
 ```
 
-***局部组件守卫***
 
-```js
 
-```
+![68](..\images\68.png)
+
+
+
+***组件内部的局部守卫***
+
+
+
+![69](..\images\69.png)
+
+
+
+
+
+![72](..\images\72.png)
+
+***使用组件内部局部守卫之  Enter***
+
+******
+
+![70](C:\project\notes\JS\images\70.png)
+
+
+
+
+
+***使用组件内部局部守卫之   Leave***
+
+![71](..\images\71.png)
+
+
 
 ###### （3-6）activeClass=“ ”设置路由自动样式
 
@@ -308,7 +385,26 @@ activeClass="active" 中 activeClass 是给路由设置一个默认的高亮显�
 
 
 
+###### (3-7) Onready事件
+
+https://blog.csdn.net/tangran0526/article/details/104038123
+
+````js
+mounted(){	
+	this.$router.onReady(() => {
+		if (this.$route.matched.length === 0) {
+			this.$router.push("/index");
+		}
+	});
+}
+
+````
+
+
+
 ##### （4）watch监听
+
+**使用场景：**一般监听数据可以用computed 和 watch ，但是假如你监听并且要向后台发送数据的话，那么你就用watch!
 
 ```js
 <div id="app">
@@ -337,7 +433,79 @@ activeClass="active" 中 activeClass 是给路由设置一个默认的高亮显�
                 this.end=this.first+newVal;
             }
         },
+       
 ```
+
+watch也可以监听 vuex中getters中的方法
+
+````js
+watch:{
+    palying(){}
+}
+computed:{
+    ...mapGetters([
+        'palying'
+    ])
+}
+````
+
+***this.$watch()***
+
+这种$watch是vue自带的属性方法，类似于watch:{}
+
+````js
+created(){
+	this.$watch('data',(newData)=>{ //data 是要监听的属性
+		...
+		this.$emit('data',newData) //派发data事件！
+	})
+}
+
+上面这种事通过app.$watch()的方法去调用监听方法，不像直接写在options中watch:{}这种方法！
+但是通过app.$watch()的方法去监听的时候，路由跳转的时候注意销毁监听，避免内存泄漏，api如下
+var unwatch = app.$watch()
+直接调用 unwatch() 即可！
+````
+
+
+
+***watch的另外用法：***
+
+````js
+data:{
+    obj:{
+        a:'A'
+    }
+}
+
+watch:{
+    obj:{
+        handle(){
+         console.log('obj.a changed')   
+        },
+        immediate:true,
+        deep:true //这个默认是false,
+        //一般watch监听是浅监听，就是obj对象改变的时候，比如给obj加个b属性，成{a:"A",b:"B"}会触发handle函数，但是obj.a的值改变的时候不会触发handle！这里的deep就可以解决掉这种问题，只要obj.a的值改变也会触发handle函数！
+        //上面设置deep:true的缺点：性能消耗！解决方案
+        // 'obj.a':{  //就是把obj改成 加引号的 'obj.a'
+        //	        handle(){
+        //			 console.log('obj.a changed')   
+        //			},
+        //			immediate:true,	
+        //          deep:false
+    	//	}
+        
+    }
+}
+````
+
+***使用watch的注意事项***
+
+
+
+![65](..\images\65.png)
+
+
 
 
 
@@ -374,6 +542,25 @@ activeClass="active" 中 activeClass 是给路由设置一个默认的高亮显�
 
     })
 ```
+
+computed 的 get set用法
+
+````js
+computed:{
+    fullname:{
+        get(){   
+            return this.first + '--' + this.second
+        },
+        set(fullname){  //一般不要用set方法
+            this.first = this.end
+        }
+    }
+}
+````
+
+
+
+
 
 ##### （6）methods,watch,computed区别
 
@@ -487,6 +674,36 @@ axios({
 </script>
 ````
 
+当业务很多组件的业务逻辑都有类似的方法的时候，可以用mixin
+
+`````
+--mixin.js文件
+export const mixin ={ //这里是对象，和上面一样
+	这里可以像组件一样写钩子函数、方法
+	mounted(){},
+	methods:{},
+	watch:{}
+}
+
+--需要调用mixin的组件
+import {mixin} from 'mixin.js'
+
+    var vm =new Vue({
+        el:'#app',
+        data:{},
+        methods:{
+        },
+        mixins:[mixin],//把外面的方法直接混入进来！那么只要调用mixin的组件都可以使用mixin.js文件中的方法！！！
+        components:{},
+    })
+`````
+
+
+
+
+
+
+
 ##### （11）快速创建node项目
 
 ```js
@@ -507,6 +724,47 @@ keep-alive标签去包裹router-view标签！这样在组件来回切换的过�
 比如：组件1，请求数据渲染轮播图，当这时候用户切换到组件2的时候，再切换成组件1的时候就重新请求了数据，从轮播图1开始轮了，影响体验！
 ````
 
+##### （13）异步加载路由组件
+
+异步加载路由组件可以减少打包时app.js的体积
+
+原来加载路由的写法如下：
+
+```jS
+import Recommend from '../components/recommend/recommend'
+import Singer from '../components/singer/singer';
+import Search from '../components/search/search';
+import Rank from '../components/rank/rank';
+import SingerDeatil from '../components/singer-deatil/singer-detail'
+
+const routes = [
+  {path:"/",redirect:'/recommend'},
+  {path: "/recommend",component:Recommend},
+  {path:"/singer",component:Singer,children:[
+      {path:":id",component:SingerDeatil}
+    ]},
+  {path:"/search",component:Search},
+  {path:"/rank",component:Rank}
+]
+```
+
+现在改成
+
+```js
+const Recommend = resolve=>{
+  import('../components/recommend/recommend').then((module)=>{
+      resolve(module)
+  })
+};
+...
+...
+就相当于用上面的方法代替 import Recommend from '../components/recommend/recommend'
+```
+
+
+
+
+
 
 
 ### 脚手架vue.cli
@@ -516,13 +774,26 @@ keep-alive标签去包裹router-view标签！这样在组件来回切换的过�
 安装：`npm i  @vue/cli -g`
 
 ```js
-创建项目： vue create myapp
+创建项目： vue create myapp  或者 vue init myapp 
+
 开发环境构建：npm run serve
 生产环境构建：npm run build
 代码检测工具（会自动修正）：npm run lint
 
 参考链接：https://www.cnblogs.com/Free-Thinker/p/10725569.html
 ```
+
+安装旧版本的cli
+
+卸载：npm uninstall -g @vue/cli
+
+安装指定版本：npm install -g @vue/cli@3   （3是版本号）
+
+***vue ui 命令***
+
+这个命令可以使用图形化界面管理vue项目文件，直接cmd输入即可！
+
+
 
 
 
@@ -670,6 +941,40 @@ export default new Vuex.Store({
 })
 ```
 
+````js
+actions参数问题：
+actions:{
+    add_num({commit}){
+        console.log({commit})
+        setTimeout(() => {
+            commit('change',100);//这里change其实是 mutations中的方法名
+        },2000)
+    }
+}
+而很多人都会疑惑{commit}是代表了什么，又是怎么来的。下面就来说一下，action函数可以接收一个与store实例具有相同方法的属性context，这个属性中包括下面几部分：
+context:{
+		state,   等同于store.$state，若在模块中则为局部状态
+		rootState,   等同于store.$state,只存在模块中
+		commit,   等同于store.$commit
+		dispatch,   等同于store.$dispatch
+		getters   等同于store.$getters
+}
+
+常规写法调用的时候会使用context.commit，但更多的是使用es6的变量解构赋值，也就是直接在参数的
+位置写自己想要的属性，如：{commit}。
+
+
+---actions文件中
+export const selectPlay = function ({commit, state}, {list, index}) {
+    这里的参数 {commit, state}就是上面要用的方法 
+    参数2 {list, index}是传入的参数值 调用selectPlay方法的时候传入的参数
+}
+````
+
+
+
+
+
 ##### 3、计算属性写法
 
 ```js
@@ -755,7 +1060,7 @@ State是唯一的数据源，组件data中的数据变量都是放在State中去
 
 State是单一的状态数
 
-##### 6、modules
+##### 6、modules 模块
 
 面对复杂的应用程序，当管理的状态较多的时候，我们需要将Vuex的Store对象分割成模块（modules）。
 
@@ -780,6 +1085,42 @@ const store = new Vuex.Store({  //合并上面的A B
 })
 ````
 
+***01那么怎么在模块化中获取各个state数据呢？***
+
+获取各个模块的state数据，需要加模块的编号，比如 .a
+
+那么怎么直接全局获取state的值呢？？看 03 用 getters 方法去获取！
+
+![73](..\images\73.png)
+
+
+
+***02那么怎么获取各个模块的mutations值呢***
+
+因为Vuex中  mutations 是全局分布的，意思就是各个模块的mutations是全局调用的，不需要像上面获取state那样通过各个模块的编号去获取！下图 a模块下定义的 mutations，全局都是公用的！但是如果不想全局公用的话那么就添加一个属性 namespaced:true，设置了这个属性后 ，a b模块下的mutations不公用，而且可以使用相同的mutations的名字命名！！！
+
+
+
+![74](..\images\74.png)
+
+
+
+***03 getters方法***
+
+
+
+![75](..\images\75.png)
+
+***04 actions方法***
+
+
+
+![76](..\images\76.png)
+
+
+
+
+
 ##### 7、vuex语法糖
 
 **01 import {mapState} from 'vuex'**
@@ -795,7 +1136,6 @@ state{
 computed:{
     ...mapState(['list']),//这里===  list(){return ..}
     a(){},
-  	
 }
 ````
 
@@ -820,6 +1160,17 @@ const getters = {
 }
 export default getters
 ````
+
+**04   import {mapActions} from 'vuex'**
+
+```js
+  ...mapActions([
+    'selectPlay',
+    'randomPlay'
+  ])
+通过 this.selectPlay() 调用！
+```
+
 
 
 
@@ -854,4 +1205,81 @@ export default getters
 ````
 
 
+
+##### 9、vuex中其他的API
+
+```js
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Vuex from 'vuex'
+import App from './app.vue'
+
+import './assets/styles/global.styl'
+import createRouter from './config/router'
+import createStore from './store/store'
+
+Vue.use(VueRouter)
+Vue.use(Vuex)
+
+const router = createRouter()
+const store = createStore()
+
+//动态创建的模块
+store.registerModule('c', {
+  state: {
+    text: 3
+  }
+})
+
+//1）store中watch的用法！！只要修改了 state.count 的值就会被调用
+// store.watch((state) => state.count + 1, (newCount) => {
+//   console.log('new count watched:', newCount)
+// })
+
+//2）subscribe 订阅功能，只要 mutation被调用就会触发！
+// store.subscribe((mutation, state) => {
+//   console.log(mutation.type)
+//   console.log(mutation.payload)  //payload是这个 mutation 接受的参数
+// })
+
+//3）只要 action 被调用就会触发！
+store.subscribeAction((action, state) => {
+  console.log(action.type)
+  console.log(action.payload)
+})
+
+//全局守卫
+router.beforeEach((to, from, next) => {
+  console.log('before each invoked')
+  next()
+  // if (to.fullPath === '/app') {
+  //   next({ path: '/login' })
+  // } else {
+  //   next()
+  // }
+})
+
+router.beforeResolve((to, from, next) => {
+  console.log('before resolve invoked')
+  next()
+})
+
+router.afterEach((to, from) => {
+  console.log('after each invoked')
+})
+
+new Vue({
+  router,
+  store,
+  render: (h) => h(App)
+}).$mount('#root')
+```
+
+
+
+##### 10、vuex中怎么定义一个Vuex插件
+
+
+
+![77](..\images\77.png)
 

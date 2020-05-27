@@ -150,6 +150,30 @@ video.load()
 
 
 
+***事件 canplay***
+
+当音视频加载完毕可以播放的时候后触发 canplay事件
+
+场景：点击下一首歌曲的时候，快速地点击会触发一些错误，所以可以设置一个锁，在canplay事件触发后再播放下一首！
+
+**事件play**
+
+play是播放的时候触发，canplay是加载到可以播放的时候触发！play是后面触发！
+
+***事件 timeupdate***
+
+只要一播放，就会触发这个事件，
+
+````js
+audio.addEventListener('timeupdate',(e)=>{ e.target.currentTime })
+````
+
+
+
+***事件ended***
+
+
+
 ### 2、表单验证
 
 ##### 01 invalid事件
@@ -190,3 +214,17 @@ Ele.addEventListener("invalid",function () {
     this.setCustomValidity("请输入正确的格式信息！")
 })
 ```
+
+
+
+### 3、svg标签
+
+参考链接
+
+https://www.cnblogs.com/daisygogogo/p/11044353.html
+
+random
+
+exchange  
+
+ban

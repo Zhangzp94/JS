@@ -88,10 +88,10 @@ text-overflow: ellipsis;  //溢出的文本用省略号代替
 
 ##### 01 图片的水平居中
 
-1.图片的默认和基线是有间隙的，可以同 verical-align这个属性解决！
+1.图片的默认和基线是有间隙的，可以同 vertical-align这个属性解决！
 
 ````js
-verical-align:middle;
+vertical-align:middle;
 ````
 
 2.如何设置图片水平居中
@@ -280,6 +280,29 @@ position为绝对定位的时候！上下左右的值为0，相当于四个点�
     background: rgba(0,0,0,0.2);
 }
 ````
+
+##### 09 backdrop-filter属性
+
+```
+.box {
+    max-width: 50%;
+    max-height: 50%;
+    padding: 20px 40px;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 5px;
+    font-family: sans-serif;
+    text-align: center;
+    line-height: 1;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+```
+
+设置背景或者图片模糊度
+
+<img src="..\images\44.png" alt="44" style="zoom:75%;" />
+
+
 
 
 
